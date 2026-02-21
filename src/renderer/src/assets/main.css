@@ -2,17 +2,17 @@
 @import "@xterm/xterm/css/xterm.css";
 
 @theme {
-  --color-bg-primary: #1e1e2e;
-  --color-bg-secondary: #181825;
-  --color-bg-tertiary: #11111b;
-  --color-bg-hover: #313244;
-  --color-bg-active: #45475a;
-  --color-border: #313244;
-  --color-text-primary: #cdd6f4;
-  --color-text-secondary: #a6adc8;
-  --color-text-muted: #6c7086;
-  --color-accent: #89b4fa;
-  --color-accent-hover: #74c7ec;
+  --color-bg-primary: #dad7cd;
+  --color-bg-secondary: #cfc9b8;
+  --color-bg-tertiary: #c4bfb0;
+  --color-bg-hover: #b8b2a1;
+  --color-bg-active: #a8a292;
+  --color-border: #b8b2a1;
+  --color-text-primary: #2d2d2d;
+  --color-text-secondary: #4a4a4a;
+  --color-text-muted: #7a7a7a;
+  --color-accent: #588157;
+  --color-accent-hover: #3a5a40;
 }
 
 html,

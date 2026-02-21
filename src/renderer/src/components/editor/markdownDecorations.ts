@@ -27,7 +27,7 @@ class HorizontalRuleWidget extends WidgetType {
   toDOM(): HTMLElement {
     const el = document.createElement('hr')
     el.style.border = 'none'
-    el.style.borderTop = '1px solid #45475a'
+    el.style.borderTop = '1px solid #b8b2a1'
     el.style.margin = '8px 0'
     return el
   }
@@ -39,7 +39,7 @@ const headingStyles: Record<number, string> = {
   3: 'font-size: 1.25em; font-weight: 600; line-height: 1.3;',
   4: 'font-size: 1.1em; font-weight: 600; line-height: 1.3;',
   5: 'font-size: 1em; font-weight: 600; line-height: 1.3;',
-  6: 'font-size: 0.9em; font-weight: 600; line-height: 1.3; color: #a6adc8;'
+  6: 'font-size: 0.9em; font-weight: 600; line-height: 1.3; color: #4a4a4a;'
 }
 
 function cursorInRange(view: EditorView, from: number, to: number): boolean {
@@ -127,7 +127,7 @@ function buildDecorations(view: EditorView): DecorationSet {
           }
           decorations.push(
             Decoration.mark({
-              attributes: { style: 'text-decoration: line-through; color: #6c7086;' }
+              attributes: { style: 'text-decoration: line-through; color: #7a7a7a;' }
             }).range(node.from, node.to)
           )
         }
@@ -144,7 +144,7 @@ function buildDecorations(view: EditorView): DecorationSet {
             Decoration.mark({
               attributes: {
                 style:
-                  'background: #313244; padding: 1px 4px; border-radius: 3px; font-family: ui-monospace, monospace; font-size: 0.9em; color: #f38ba8;'
+                  'background: #cfc9b8; padding: 1px 4px; border-radius: 3px; font-family: ui-monospace, monospace; font-size: 0.9em; color: #9b2226;'
               }
             }).range(node.from, node.to)
           )
@@ -167,7 +167,7 @@ function buildDecorations(view: EditorView): DecorationSet {
           if (labelChild) {
             decorations.push(
               Decoration.mark({
-                attributes: { style: 'color: #89b4fa; text-decoration: underline;' }
+                attributes: { style: 'color: #588157; text-decoration: underline;' }
               }).range(labelChild.from, labelChild.to)
             )
           }
@@ -183,7 +183,7 @@ function buildDecorations(view: EditorView): DecorationSet {
                   toDOM(): HTMLElement {
                     const el = document.createElement('span')
                     el.textContent = '•'
-                    el.style.color = '#89b4fa'
+                    el.style.color = '#588157'
                     el.style.fontWeight = '700'
                     el.style.marginRight = '2px'
                     return el
@@ -218,7 +218,7 @@ function buildDecorations(view: EditorView): DecorationSet {
               Decoration.line({
                 attributes: {
                   style:
-                    'border-left: 3px solid #89b4fa; padding-left: 12px; color: #a6adc8; font-style: italic;'
+                    'border-left: 3px solid #588157; padding-left: 12px; color: #4a4a4a; font-style: italic;'
                 }
               }).range(line.from)
             )
@@ -255,7 +255,7 @@ function buildDecorations(view: EditorView): DecorationSet {
               Decoration.line({
                 attributes: {
                   style:
-                    'background: #181825; font-family: ui-monospace, monospace; font-size: 0.9em;'
+                    'background: #c4bfb0; font-family: ui-monospace, monospace; font-size: 0.9em;'
                 }
               }).range(line.from)
             )
@@ -285,7 +285,7 @@ function buildDecorations(view: EditorView): DecorationSet {
                   widget: new (class extends WidgetType {
                     toDOM(): HTMLElement {
                       const el = document.createElement('span')
-                      el.style.color = '#89b4fa'
+                      el.style.color = '#588157'
                       el.style.fontSize = '0.85em'
                       el.textContent = `🖼 image`
                       el.title = urlText
@@ -326,29 +326,31 @@ export const markdownDecorationPlugin = ViewPlugin.fromClass(
 export const wysiwygTheme = EditorView.theme({
   '&': {
     height: '100%',
-    fontSize: '14px'
+    fontSize: '14px',
+    backgroundColor: '#dad7cd'
   },
   '.cm-content': {
     fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
     padding: '16px 24px',
     maxWidth: '800px',
     lineHeight: '1.7',
-    caretColor: '#89b4fa'
+    caretColor: '#588157',
+    color: '#2d2d2d'
   },
   '.cm-cursor': {
-    borderLeftColor: '#89b4fa'
+    borderLeftColor: '#588157'
   },
   '.cm-gutters': {
     display: 'none'
   },
   '.cm-activeLine': {
-    backgroundColor: 'rgba(49, 50, 68, 0.4)'
+    backgroundColor: 'rgba(88, 129, 87, 0.08)'
   },
   '.cm-selectionBackground': {
-    backgroundColor: 'rgba(137, 180, 250, 0.2) !important'
+    backgroundColor: 'rgba(88, 129, 87, 0.15) !important'
   },
   '&.cm-focused .cm-selectionBackground': {
-    backgroundColor: 'rgba(137, 180, 250, 0.3) !important'
+    backgroundColor: 'rgba(88, 129, 87, 0.25) !important'
   },
   '.cm-scroller': {
     overflow: 'auto'

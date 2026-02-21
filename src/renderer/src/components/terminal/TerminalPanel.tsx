@@ -1,7 +1,8 @@
-import { useEffect, useState, useCallback } from 'react'
+import { useEffect, useRef, useState, useCallback } from 'react'
 import { Plus, X } from 'lucide-react'
 import { useLayoutStore } from '../../stores/layoutStore'
 import { useExplorerStore } from '../../stores/explorerStore'
+import { useEditorStore } from '../../stores/editorStore'
 import TerminalInstance from './TerminalInstance'
 
 interface TerminalTab {
@@ -13,17 +14,23 @@ interface TerminalTab {
 function TerminalPanel(): React.JSX.Element | null {
   const { terminalVisible, terminalWidth } = useLayoutStore()
   const { projectRoot } = useExplorerStore()
+  const { tabs: editorTabs, activeTabId } = useEditorStore()
   const [terminals, setTerminals] = useState<TerminalTab[]>([])
   const [activeId, setActiveId] = useState<string | null>(null)
 
   const createTerminal = useCallback(async () => {
-    const ptyId = await window.api.terminal.create(projectRoot ?? undefined)
+    const activeTab = editorTabs.find((t) => t.id === activeTabId)
+    const filePath = activeTab?.filePath
+    const fileDir = filePath ? filePath.substring(0, filePath.lastIndexOf('/')) : null
+    const cwd = fileDir || projectRoot || undefined
+
+    const ptyId = await window.api.terminal.create(cwd)
     const id = `term-${Date.now()}`
-    const idx = terminals.length + 1
-    const tab: TerminalTab = { id, ptyId, label: `Terminal ${idx}` }
+    const dirName = cwd ? cwd.split('/').pop() || 'terminal' : '~'
+    const tab: TerminalTab = { id, ptyId, label: dirName }
     setTerminals((prev) => [...prev, tab])
     setActiveId(id)
-  }, [terminals.length])
+  }, [editorTabs, activeTabId, projectRoot])
 
   const closeTerminal = useCallback(
     async (id: string) => {
@@ -43,12 +50,19 @@ function TerminalPanel(): React.JSX.Element | null {
     [terminals, activeId]
   )
 
-  // 앱 시작 시 터미널 하나 자동 생성
+  const createTerminalRef = useRef(createTerminal)
+  createTerminalRef.current = createTerminal
+  const isCreating = useRef(false)
+
+  // 터미널 패널 열릴 때 터미널 하나 자동 생성
   useEffect(() => {
-    if (terminalVisible && terminals.length === 0) {
-      createTerminal()
+    if (terminalVisible && terminals.length === 0 && !isCreating.current) {
+      isCreating.current = true
+      createTerminalRef.current().finally(() => {
+        isCreating.current = false
+      })
     }
-  }, [terminalVisible])
+  }, [terminalVisible, terminals.length])
 
   if (!terminalVisible) return null
 
@@ -69,7 +83,9 @@ function TerminalPanel(): React.JSX.Element | null {
               onClick={() => setActiveId(tab.id)}
               className={`
                 group flex items-center h-[28px] px-3 gap-2 cursor-pointer rounded text-xs shrink-0
-                ${isActive ? 'bg-bg-tertiary text-text-primary' : 'text-text-secondary hover:bg-bg-hover'}
+                ${isActive
+                  ? 'bg-bg-tertiary text-text-primary border border-border'
+                  : 'bg-bg-primary/50 text-text-secondary border border-transparent hover:bg-bg-hover hover:border-border'}
               `}
             >
               <span className="truncate max-w-[100px]">{tab.label}</span>

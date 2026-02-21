@@ -1,10 +1,12 @@
 import { useEffect, useCallback } from 'react'
 import { useEditorStore } from '../../stores/editorStore'
+import { useExplorerStore } from '../../stores/explorerStore'
 import TabBar from './TabBar'
 import WysiwygEditor from './WysiwygEditor'
 
 function EditorPanel(): React.JSX.Element {
   const { tabs, activeTabId, openTab, updateContent, markSaved } = useEditorStore()
+  const projectRoot = useExplorerStore((s) => s.projectRoot)
   const activeTab = tabs.find((t) => t.id === activeTabId)
 
   const handleOpen = useCallback(async () => {
@@ -45,7 +47,25 @@ function EditorPanel(): React.JSX.Element {
       }
       if (mod && e.key === 'n') {
         e.preventDefault()
-        openTab({ filePath: null, fileName: 'Untitled.md', content: '', language: 'markdown' })
+        if (projectRoot) {
+          const baseName = 'Untitled'
+          const ext = '.md'
+          // 중복 방지: Untitled.md, Untitled 1.md, ...
+          let fileName = baseName + ext
+          let filePath = `${projectRoot}/${fileName}`
+          let counter = 1
+          const existingNames = new Set(tabs.map((t) => t.fileName))
+          while (existingNames.has(fileName)) {
+            fileName = `${baseName} ${counter}${ext}`
+            filePath = `${projectRoot}/${fileName}`
+            counter++
+          }
+          window.api.file.save(filePath, '').then(() => {
+            openTab({ filePath, fileName, content: '', language: 'markdown' })
+          })
+        } else {
+          openTab({ filePath: null, fileName: 'Untitled.md', content: '', language: 'markdown' })
+        }
       }
     }
     window.addEventListener('keydown', onKeyDown)

@@ -23,24 +23,24 @@ function getFileIcon(name: string) {
     case 'markdown':
     case 'txt':
     case 'rtf':
-      return { icon: FileText, color: '#89b4fa' }
+      return { icon: FileText, color: '#4a90d9' }
     case 'js':
     case 'jsx':
-      return { icon: FileCode, color: '#f9e2af' }
+      return { icon: FileCode, color: '#b8860b' }
     case 'ts':
     case 'tsx':
-      return { icon: FileCode, color: '#89b4fa' }
+      return { icon: FileCode, color: '#2b6cb0' }
     case 'py':
-      return { icon: FileCode, color: '#a6e3a1' }
+      return { icon: FileCode, color: '#388e3c' }
     case 'json':
-      return { icon: FileJson, color: '#f9e2af' }
+      return { icon: FileJson, color: '#b8860b' }
     case 'html':
     case 'htm':
-      return { icon: FileCode, color: '#f38ba8' }
+      return { icon: FileCode, color: '#c62828' }
     case 'css':
     case 'scss':
     case 'less':
-      return { icon: FileCode, color: '#89b4fa' }
+      return { icon: FileCode, color: '#2b6cb0' }
     case 'png':
     case 'jpg':
     case 'jpeg':
@@ -48,36 +48,36 @@ function getFileIcon(name: string) {
     case 'svg':
     case 'ico':
     case 'webp':
-      return { icon: Image, color: '#f5c2e7' }
+      return { icon: Image, color: '#8e24aa' }
     case 'yaml':
     case 'yml':
     case 'toml':
     case 'ini':
     case 'env':
-      return { icon: Settings, color: '#6c7086' }
+      return { icon: Settings, color: '#7a7a7a' }
     case 'sh':
     case 'bash':
     case 'zsh':
-      return { icon: FileCode, color: '#a6e3a1' }
+      return { icon: FileCode, color: '#388e3c' }
     default:
       break
   }
 
   // 특수 파일명
   if (name === 'Dockerfile' || name === 'Makefile' || name === 'Vagrantfile') {
-    return { icon: Settings, color: '#89b4fa' }
+    return { icon: Settings, color: '#2b6cb0' }
   }
   if (name === '.gitignore' || name === '.eslintrc' || name === '.prettierrc') {
-    return { icon: Settings, color: '#6c7086' }
+    return { icon: Settings, color: '#7a7a7a' }
   }
 
-  return { icon: File, color: '#6c7086' }
+  return { icon: File, color: '#7a7a7a' }
 }
 
 function FileIcon({ name, isDirectory, isOpen }: FileIconProps): React.JSX.Element {
   if (isDirectory) {
     const Icon = isOpen ? FolderOpen : Folder
-    return <Icon size={16} strokeWidth={1.5} style={{ color: '#89b4fa' }} className="shrink-0" />
+    return <Icon size={16} strokeWidth={1.5} style={{ color: '#588157' }} className="shrink-0" />
   }
 
   const { icon: Icon, color } = getFileIcon(name)

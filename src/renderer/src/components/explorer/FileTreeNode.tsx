@@ -55,11 +55,16 @@ function FileTreeNode({ node, depth }: FileTreeNodeProps): React.JSX.Element {
         </span>
       </div>
 
-      {node.isDirectory && isExpanded && node.children && (
-        <div>
-          {node.children.map((child) => (
-            <FileTreeNode key={child.path} node={child} depth={depth + 1} />
-          ))}
+      {node.isDirectory && node.children && (
+        <div
+          className="grid transition-[grid-template-rows] duration-150 ease-out"
+          style={{ gridTemplateRows: isExpanded ? '1fr' : '0fr' }}
+        >
+          <div className="overflow-hidden">
+            {node.children.map((child) => (
+              <FileTreeNode key={child.path} node={child} depth={depth + 1} />
+            ))}
+          </div>
         </div>
       )}
     </div>

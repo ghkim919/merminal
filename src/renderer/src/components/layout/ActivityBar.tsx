@@ -1,4 +1,4 @@
-import { Files, Search } from 'lucide-react'
+import { Files, Search, Terminal } from 'lucide-react'
 import { useLayoutStore } from '../../stores/layoutStore'
 
 const items = [
@@ -7,7 +7,7 @@ const items = [
 ]
 
 function ActivityBar(): React.JSX.Element {
-  const { activePanel, sidebarVisible, setActivePanel } = useLayoutStore()
+  const { activePanel, sidebarVisible, setActivePanel, terminalVisible, toggleTerminal } = useLayoutStore()
 
   return (
     <div className="flex flex-col w-[48px] shrink-0 bg-bg-tertiary border-r border-border">
@@ -31,6 +31,23 @@ function ActivityBar(): React.JSX.Element {
           </button>
         )
       })}
+
+      <div className="flex-1" />
+
+      <button
+        title="Terminal"
+        onClick={toggleTerminal}
+        className={`
+          flex items-center justify-center w-full h-[48px]
+          border-l-2 transition-colors
+          ${terminalVisible
+            ? 'border-accent text-text-primary'
+            : 'border-transparent text-text-muted hover:text-text-secondary'
+          }
+        `}
+      >
+        <Terminal size={22} strokeWidth={1.5} />
+      </button>
     </div>
   )
 }

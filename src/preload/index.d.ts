@@ -38,11 +38,17 @@ interface ExplorerAPI {
   onFileChanged(callback: (filePath: string) => void): () => void
 }
 
+interface StoreAPI {
+  get(key: string): Promise<unknown>
+  set(key: string, value: unknown): Promise<void>
+}
+
 interface API {
   file: FileAPI
   window: WindowAPI
   terminal: TerminalAPI
   explorer: ExplorerAPI
+  store: StoreAPI
 }
 
 declare global {
