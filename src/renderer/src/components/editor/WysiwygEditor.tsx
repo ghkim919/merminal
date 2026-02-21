@@ -3,11 +3,12 @@ import { useCodeMirror } from '../../hooks/useCodeMirror'
 interface WysiwygEditorProps {
   content: string
   language: string
+  filePath?: string | null
   onChange?: (content: string) => void
 }
 
-function WysiwygEditor({ content, language, onChange }: WysiwygEditorProps): React.JSX.Element {
-  const { containerRef } = useCodeMirror({ content, language, onChange })
+function WysiwygEditor({ content, language, filePath, onChange }: WysiwygEditorProps): React.JSX.Element {
+  const { containerRef } = useCodeMirror({ content, language, filePath, onChange })
 
   return (
     <div

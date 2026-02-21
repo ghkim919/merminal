@@ -1,5 +1,6 @@
 @import "tailwindcss";
 @import "@xterm/xterm/css/xterm.css";
+@import "katex/dist/katex.min.css";
 
 @theme {
   --color-bg-primary: #dad7cd;

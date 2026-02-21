@@ -93,6 +93,7 @@ function EditorPanel(): React.JSX.Element {
         key={activeTab.id}
         content={activeTab.content}
         language={activeTab.language}
+        filePath={activeTab.filePath}
         onChange={(content) => updateContent(activeTab.id, content)}
       />
     </div>

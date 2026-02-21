@@ -3,6 +3,7 @@ import { EditorState } from '@codemirror/state'
 import { EditorView, keymap } from '@codemirror/view'
 import { defaultKeymap, history, historyKeymap, indentWithTab } from '@codemirror/commands'
 import { markdown, markdownLanguage } from '@codemirror/lang-markdown'
+import { GFM } from '@lezer/markdown'
 import { javascript } from '@codemirror/lang-javascript'
 import { python } from '@codemirror/lang-python'
 import { json } from '@codemirror/lang-json'
@@ -10,13 +11,13 @@ import { html } from '@codemirror/lang-html'
 import { css } from '@codemirror/lang-css'
 import { syntaxHighlighting, defaultHighlightStyle, bracketMatching } from '@codemirror/language'
 import { searchKeymap, highlightSelectionMatches } from '@codemirror/search'
-import { markdownDecorationPlugin, wysiwygTheme } from '../components/editor/markdownDecorations'
+import { markdownDecorationPlugin, wysiwygTheme, filePathFacet } from '../components/editor/markdownDecorations'
 import { languages } from '@codemirror/language-data'
 
 function getLanguageExtension(lang: string) {
   switch (lang) {
     case 'markdown':
-      return markdown({ base: markdownLanguage, codeLanguages: languages })
+      return markdown({ base: markdownLanguage, codeLanguages: languages, extensions: [GFM] })
     case 'javascript':
     case 'typescript':
       return javascript({ typescript: lang === 'typescript', jsx: true })
@@ -29,17 +30,18 @@ function getLanguageExtension(lang: string) {
     case 'css':
       return css()
     default:
-      return markdown({ base: markdownLanguage, codeLanguages: languages })
+      return markdown({ base: markdownLanguage, codeLanguages: languages, extensions: [GFM] })
   }
 }
 
 interface UseCodeMirrorOptions {
   content: string
   language: string
+  filePath?: string | null
   onChange?: (content: string) => void
 }
 
-export function useCodeMirror({ content, language, onChange }: UseCodeMirrorOptions) {
+export function useCodeMirror({ content, language, filePath, onChange }: UseCodeMirrorOptions) {
   const containerRef = useRef<HTMLDivElement>(null)
   const viewRef = useRef<EditorView | null>(null)
   const onChangeRef = useRef(onChange)
@@ -66,6 +68,7 @@ export function useCodeMirror({ content, language, onChange }: UseCodeMirrorOpti
     ]
 
     if (isMarkdown) {
+      extensions.push(filePathFacet.of(filePath || ''))
       extensions.push(markdownDecorationPlugin)
       extensions.push(EditorView.lineWrapping)
     }
