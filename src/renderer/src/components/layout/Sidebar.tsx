@@ -1,5 +1,6 @@
 import { useLayoutStore } from '../../stores/layoutStore'
 import FileExplorer from '../explorer/FileExplorer'
+import SettingsPanel from '../settings/SettingsPanel'
 
 function Sidebar(): React.JSX.Element | null {
   const { sidebarVisible, sidebarWidth, activePanel } = useLayoutStore()
@@ -14,6 +15,8 @@ function Sidebar(): React.JSX.Element | null {
       <div className="flex-1 overflow-hidden">
         {activePanel === 'explorer' ? (
           <FileExplorer />
+        ) : activePanel === 'settings' ? (
+          <SettingsPanel />
         ) : (
           <div className="flex flex-col h-full">
             <div className="flex items-center h-[28px] px-3 shrink-0">

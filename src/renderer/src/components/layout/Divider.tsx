@@ -1,4 +1,4 @@
-import { useCallback, useRef } from 'react'
+import { useCallback, useRef, useState } from 'react'
 
 interface DividerProps {
   onResize: (delta: number) => void
@@ -7,11 +7,13 @@ interface DividerProps {
 
 function Divider({ onResize, direction = 'horizontal' }: DividerProps): React.JSX.Element {
   const startPos = useRef(0)
+  const [dragging, setDragging] = useState(false)
 
   const onMouseDown = useCallback(
     (e: React.MouseEvent) => {
       e.preventDefault()
       startPos.current = direction === 'horizontal' ? e.clientX : e.clientY
+      setDragging(true)
 
       const onMouseMove = (moveEvent: MouseEvent): void => {
         const current = direction === 'horizontal' ? moveEvent.clientX : moveEvent.clientY
@@ -25,6 +27,7 @@ function Divider({ onResize, direction = 'horizontal' }: DividerProps): React.JS
         document.removeEventListener('mouseup', onMouseUp)
         document.body.style.cursor = ''
         document.body.style.userSelect = ''
+        setDragging(false)
       }
 
       document.addEventListener('mousemove', onMouseMove)
@@ -41,11 +44,27 @@ function Divider({ onResize, direction = 'horizontal' }: DividerProps): React.JS
     <div
       onMouseDown={onMouseDown}
       className={`
-        shrink-0 bg-border transition-colors hover:bg-accent
-        ${isHorizontal ? 'w-[1px] cursor-col-resize hover:w-[3px]' : 'h-[1px] cursor-row-resize hover:h-[3px]'}
+        shrink-0 relative
+        ${isHorizontal ? 'cursor-col-resize' : 'cursor-row-resize'}
       `}
-      style={{ marginInline: isHorizontal ? -1 : 0, marginBlock: isHorizontal ? 0 : -1, zIndex: 10 }}
-    />
+      style={{
+        width: isHorizontal ? 5 : undefined,
+        height: isHorizontal ? undefined : 5,
+        zIndex: 10
+      }}
+    >
+      <div
+        className={`
+          absolute transition-colors
+          ${isHorizontal ? 'top-0 bottom-0 left-1/2 -translate-x-1/2' : 'left-0 right-0 top-1/2 -translate-y-1/2'}
+          ${dragging ? 'bg-accent' : 'bg-border hover:bg-accent'}
+        `}
+        style={{
+          width: isHorizontal ? 1 : undefined,
+          height: isHorizontal ? undefined : 1
+        }}
+      />
+    </div>
   )
 }
 

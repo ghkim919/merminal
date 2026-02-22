@@ -43,12 +43,42 @@ interface StoreAPI {
   set(key: string, value: unknown): Promise<void>
 }
 
+interface ImportedThemeColors {
+  background: string
+  foreground: string
+  cursor: string
+  cursorAccent?: string
+  selectionBackground: string
+  selectionForeground?: string
+  black: string
+  red: string
+  green: string
+  yellow: string
+  blue: string
+  magenta: string
+  cyan: string
+  white: string
+  brightBlack: string
+  brightRed: string
+  brightGreen: string
+  brightYellow: string
+  brightBlue: string
+  brightMagenta: string
+  brightCyan: string
+  brightWhite: string
+}
+
+interface ThemeAPI {
+  importItermcolors(): Promise<{ name: string; colors: ImportedThemeColors } | null>
+}
+
 interface API {
   file: FileAPI
   window: WindowAPI
   terminal: TerminalAPI
   explorer: ExplorerAPI
   store: StoreAPI
+  theme: ThemeAPI
 }
 
 declare global {

@@ -1,6 +1,6 @@
 import { create } from 'zustand'
 
-type SidebarPanel = 'explorer' | 'search'
+type SidebarPanel = 'explorer' | 'search' | 'settings'
 
 interface LayoutState {
   sidebarVisible: boolean
@@ -11,16 +11,18 @@ interface LayoutState {
 
   toggleSidebar: () => void
   setSidebarWidth: (width: number) => void
+  adjustSidebarWidth: (delta: number) => void
   setActivePanel: (panel: SidebarPanel) => void
   toggleTerminal: () => void
   setTerminalWidth: (width: number) => void
+  adjustTerminalWidth: (delta: number) => void
 }
 
 export const useLayoutStore = create<LayoutState>((set, get) => ({
   sidebarVisible: true,
   sidebarWidth: 250,
   activePanel: 'explorer',
-  terminalVisible: true,
+  terminalVisible: false,
   terminalWidth: 450,
 
   toggleSidebar: () => {
@@ -29,6 +31,11 @@ export const useLayoutStore = create<LayoutState>((set, get) => ({
 
   setSidebarWidth: (width: number) => {
     set({ sidebarWidth: Math.max(180, Math.min(500, width)) })
+  },
+
+  adjustSidebarWidth: (delta: number) => {
+    const current = get().sidebarWidth
+    set({ sidebarWidth: Math.max(180, Math.min(500, current + delta)) })
   },
 
   setActivePanel: (panel: SidebarPanel) => {
@@ -46,5 +53,10 @@ export const useLayoutStore = create<LayoutState>((set, get) => ({
 
   setTerminalWidth: (width: number) => {
     set({ terminalWidth: Math.max(250, Math.min(800, width)) })
+  },
+
+  adjustTerminalWidth: (delta: number) => {
+    const current = get().terminalWidth
+    set({ terminalWidth: Math.max(250, Math.min(800, current + delta)) })
   }
 }))

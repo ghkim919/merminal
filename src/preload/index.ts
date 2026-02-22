@@ -62,6 +62,9 @@ const api = {
   store: {
     get: (key: string): Promise<unknown> => ipcRenderer.invoke('store:get', key),
     set: (key: string, value: unknown): Promise<void> => ipcRenderer.invoke('store:set', key, value)
+  },
+  theme: {
+    importItermcolors: () => ipcRenderer.invoke('theme:importItermcolors')
   }
 }
 

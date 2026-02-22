@@ -1,4 +1,4 @@
-import { Files, Search, Terminal } from 'lucide-react'
+import { Files, Search, Terminal, Settings } from 'lucide-react'
 import { useLayoutStore } from '../../stores/layoutStore'
 
 const items = [
@@ -33,6 +33,21 @@ function ActivityBar(): React.JSX.Element {
       })}
 
       <div className="flex-1" />
+
+      <button
+        title="Settings"
+        onClick={() => setActivePanel('settings')}
+        className={`
+          flex items-center justify-center w-full h-[48px]
+          border-l-2 transition-colors
+          ${activePanel === 'settings' && sidebarVisible
+            ? 'border-accent text-text-primary'
+            : 'border-transparent text-text-muted hover:text-text-secondary'
+          }
+        `}
+      >
+        <Settings size={22} strokeWidth={1.5} />
+      </button>
 
       <button
         title="Terminal"

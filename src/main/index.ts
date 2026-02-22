@@ -4,6 +4,7 @@ import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import { registerFileHandlers } from './ipc/fileHandlers'
 import { registerTerminalHandlers, cleanupAllPtys } from './ipc/terminalHandlers'
 import { registerExplorerHandlers, cleanupWatcher } from './ipc/explorerHandlers'
+import { registerThemeHandlers } from './ipc/themeHandlers'
 import StoreModule from 'electron-store'
 import icon from '../../resources/icon.png?asset'
 
@@ -64,6 +65,7 @@ app.whenReady().then(() => {
   registerFileHandlers()
   registerTerminalHandlers()
   registerExplorerHandlers()
+  registerThemeHandlers()
   createWindow()
 
   app.on('activate', () => {

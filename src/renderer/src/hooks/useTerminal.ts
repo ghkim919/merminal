@@ -1,6 +1,7 @@
 import { useRef, useEffect, useCallback } from 'react'
 import { Terminal } from '@xterm/xterm'
 import { FitAddon } from '@xterm/addon-fit'
+import { useTerminalThemeStore } from '../stores/terminalThemeStore'
 
 interface UseTerminalOptions {
   ptyId: string | null
@@ -27,34 +28,15 @@ export function useTerminal({ ptyId }: UseTerminalOptions) {
   useEffect(() => {
     if (!containerRef.current || !ptyId) return
 
+    const themeColors = useTerminalThemeStore.getState().activeThemeColors()
+
     const terminal = new Terminal({
       cursorBlink: true,
       cursorStyle: 'bar',
       fontSize: 13,
       fontFamily: 'Menlo, Monaco, "Courier New", monospace',
       lineHeight: 1.4,
-      theme: {
-        background: '#11111b',
-        foreground: '#cdd6f4',
-        cursor: '#89b4fa',
-        selectionBackground: 'rgba(137, 180, 250, 0.3)',
-        black: '#45475a',
-        red: '#f38ba8',
-        green: '#a6e3a1',
-        yellow: '#f9e2af',
-        blue: '#89b4fa',
-        magenta: '#f5c2e7',
-        cyan: '#94e2d5',
-        white: '#bac2de',
-        brightBlack: '#585b70',
-        brightRed: '#f38ba8',
-        brightGreen: '#a6e3a1',
-        brightYellow: '#f9e2af',
-        brightBlue: '#89b4fa',
-        brightMagenta: '#f5c2e7',
-        brightCyan: '#94e2d5',
-        brightWhite: '#a6adc8'
-      },
+      theme: themeColors,
       allowProposedApi: true
     })
 
@@ -63,18 +45,15 @@ export function useTerminal({ ptyId }: UseTerminalOptions) {
 
     terminal.open(containerRef.current)
 
-    // fit 후 PTY에 cols/rows 전달
     setTimeout(() => {
       fitAddon.fit()
       window.api.terminal.resize(ptyId, terminal.cols, terminal.rows)
     }, 50)
 
-    // 터미널 입력 → PTY
     terminal.onData((data) => {
       window.api.terminal.write(ptyId, data)
     })
 
-    // PTY 출력 → 터미널
     const removeDataListener = window.api.terminal.onData((id, data) => {
       if (id === ptyId) {
         terminal.write(data)
@@ -99,17 +78,42 @@ export function useTerminal({ ptyId }: UseTerminalOptions) {
     }
   }, [ptyId])
 
-  // 리사이즈 감지
+  // theme 변경 실시간 반영
+  useEffect(() => {
+    return useTerminalThemeStore.subscribe((state) => {
+      const terminal = terminalRef.current
+      if (terminal) {
+        terminal.options.theme = state.activeThemeColors()
+      }
+    })
+  }, [])
+
+  // 리사이즈 감지 (debounce로 PTY resize 폭주 방지)
   useEffect(() => {
     if (!containerRef.current) return
 
+    let timer: ReturnType<typeof setTimeout> | null = null
     const observer = new ResizeObserver(() => {
-      fit()
+      // xterm 레이아웃은 즉시 맞추되 PTY 통지는 debounce
+      const fitAddon = fitAddonRef.current
+      if (fitAddon) {
+        try { fitAddon.fit() } catch { /* ignore */ }
+      }
+      if (timer) clearTimeout(timer)
+      timer = setTimeout(() => {
+        const terminal = terminalRef.current
+        if (terminal && ptyId) {
+          window.api.terminal.resize(ptyId, terminal.cols, terminal.rows)
+        }
+      }, 150)
     })
 
     observer.observe(containerRef.current)
-    return () => observer.disconnect()
-  }, [fit])
+    return () => {
+      observer.disconnect()
+      if (timer) clearTimeout(timer)
+    }
+  }, [ptyId])
 
   return { containerRef, fit }
 }

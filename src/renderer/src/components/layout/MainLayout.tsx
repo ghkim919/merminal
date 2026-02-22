@@ -10,11 +10,9 @@ import TerminalPanel from '../terminal/TerminalPanel'
 function MainLayout(): React.JSX.Element {
   const {
     sidebarVisible,
-    sidebarWidth,
-    setSidebarWidth,
+    adjustSidebarWidth,
     terminalVisible,
-    terminalWidth,
-    setTerminalWidth
+    adjustTerminalWidth
   } = useLayoutStore()
 
   return (
@@ -28,7 +26,7 @@ function MainLayout(): React.JSX.Element {
           <>
             <Sidebar />
             <Divider
-              onResize={(delta) => setSidebarWidth(sidebarWidth + delta)}
+              onResize={(delta) => adjustSidebarWidth(delta)}
             />
           </>
         )}
@@ -38,7 +36,7 @@ function MainLayout(): React.JSX.Element {
         {terminalVisible && (
           <>
             <Divider
-              onResize={(delta) => setTerminalWidth(terminalWidth - delta)}
+              onResize={(delta) => adjustTerminalWidth(-delta)}
             />
             <TerminalPanel />
           </>
