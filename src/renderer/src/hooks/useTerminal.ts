@@ -1,6 +1,8 @@
 import { useRef, useEffect, useCallback } from 'react'
 import { Terminal } from '@xterm/xterm'
 import { FitAddon } from '@xterm/addon-fit'
+import { Unicode11Addon } from '@xterm/addon-unicode11'
+import { WebglAddon } from '@xterm/addon-webgl'
 import { useTerminalThemeStore } from '../stores/terminalThemeStore'
 
 interface UseTerminalOptions {
@@ -35,15 +37,23 @@ export function useTerminal({ ptyId }: UseTerminalOptions) {
       cursorStyle: 'bar',
       fontSize: 13,
       fontFamily: 'Menlo, Monaco, "Courier New", monospace',
-      lineHeight: 1.4,
+      lineHeight: 1.1,
       theme: themeColors,
       allowProposedApi: true
     })
 
     const fitAddon = new FitAddon()
     terminal.loadAddon(fitAddon)
+    terminal.loadAddon(new Unicode11Addon())
+    terminal.unicode.activeVersion = '11'
 
     terminal.open(containerRef.current)
+
+    try {
+      terminal.loadAddon(new WebglAddon())
+    } catch {
+      // WebGL not available, fall back to canvas renderer
+    }
 
     setTimeout(() => {
       fitAddon.fit()
